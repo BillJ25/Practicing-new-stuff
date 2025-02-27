@@ -5,20 +5,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto Play Video</title>
+    <style>
+        /* Fullscreen Video with Margin */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: black; /* Black background for contrast */
+        }
+
+        video {
+            width: 94vw;  /* 100vw - (3% margin on left + 3% margin on right) */
+            height: 94vh; /* 100vh - (3% margin on top + 3% margin on bottom) */
+            max-width: 94%;
+            max-height: 94%;
+            object-fit: contain; /* Maintain aspect ratio without cropping */
+        }
+    </style>
 </head>
 <body>
 
     <!-- Your Video Element -->
-    <video id="Calum_Dan_Van_trim_small" width="680" height="480" autoplay muted playsinline>
-        <source src="Calum_Dan_Van_trim_small.mp4" type="video/mp4">
+    <video id="myVideo" autoplay muted playsinline>
+        <source src="your-video.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let video = document.getElementById("myVideo");
+
+            // Try to autoplay
             video.play().catch(error => {
                 console.error("Autoplay prevented:", error);
+            });
+
+            // Unmute and disable pause on first user click
+            document.addEventListener("click", function enableSound() {
+                video.muted = false;
+                video.volume = 1.0;
+                console.log("Sound enabled");
+
+                // Prevent pausing and volume change for 10 seconds
+                video.addEventListener("pause", preventPause);
+                video.addEventListener("volumechange", preventVolumeChange);
+
+                function preventPause() {
+                    video.play(); // Force play if user tries to pause
+                }
+
+                function preventVolumeChange() {
+                    if (video.volume < 1.0) {
+                        video.volume = 1.0; // Force max volume
+                    }
+                }
+
+                // After 10 seconds, allow pausing and volume changes again
+                setTimeout(() => {
+                    video.removeEventListener("pause", preventPause);
+                    video.removeEventListener("volumechange", preventVolumeChange);
+                    console.log("User can now pause and change volume.");
+                }, 10000);
+
+                // Remove click listener after activation
+                document.removeEventListener("click", enableSound);
             });
         });
     </script>
