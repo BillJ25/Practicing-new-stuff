@@ -1,23 +1,27 @@
-<title>Does this work?! What happens if it's a really long title? Does the tab just cut it off?</title>
-<centre>This is centred hopefully</centre>
-<h2>This is a h2 heading</h2>
-<h3>This is a h3 heading</h3>
-<h4>This is a h4 heading</h4>
-<h5>This is a h5 heading</h5>
-<h6>This is a h6 heading</h6>
-<b>This is whatever b text is. Bold apparently?</b>
-<p1>This is whatever a p1 is!</p1>
-<i>This should be italics</i>
-<mark>What does mark look like?</mark>
-<em>Apperantly this is emphisised text</em>
-<strong> This is strong text</strong>
-<sub>Subscript</sub><sup>Superscript</sup>
-Can I do both at once?  (This text has no little markers at each end)
-<P>Did the line without little markers ppear?</P>
-<img src="kayaks.png"
-alt="Kayaks" />
-<video width="680" height="480" controls>
-  <source src="Calum_Dan_Van_trim_small.mp4" type="video/mp4">
-<source src="Calum_Dan_Van_trim_small.ogg" type="video/ogg">
-Your browser does not support the video tag.
-</video>
+<title>ChatGPT video code</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Play Video</title>
+</head>
+<body>
+
+    <!-- Your Video Element -->
+    <video id="Calum_Dan_Van_trim_small" width="680" height="480" autoplay muted playsinline>
+        <source src="Calum_Dan_Van_trim_small.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let video = document.getElementById("myVideo");
+            video.play().catch(error => {
+                console.error("Autoplay prevented:", error);
+            });
+        });
+    </script>
+
+</body>
+</html>
