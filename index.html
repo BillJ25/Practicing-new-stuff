@@ -1,4 +1,3 @@
-<title>ChatGPT video code</title>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,6 +32,7 @@
             height: 100%;
             max-width: 100%;
             max-height: 100%;
+            aspect-ratio: 4 / 3; /* Ensure 680x480 aspect ratio */
             object-fit: contain; /* Maintain aspect ratio without cropping */
         }
     </style>
@@ -49,19 +49,27 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let video = document.getElementById("myVideo");
+            let video = document.getElementById("Calum_Dan_Van_trim_small");
 
-            // Try to autoplay
+            // Try to autoplay (most browsers allow muted autoplay)
             video.play().catch(error => {
                 console.error("Autoplay prevented:", error);
             });
 
             // Fix for iOS/Safari: Play video again after user interaction
-            document.addEventListener("click", function enableSound() {
+            function enableSound() {
                 video.muted = false;
                 video.volume = 1.0;
-                video.play(); // Ensures playback on mobile browsers
-                console.log("Sound enabled");
+
+                // Ensure the video plays after enabling sound
+                let playPromise = video.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log("Sound enabled and video playing");
+                    }).catch(error => {
+                        console.error("Playback prevented:", error);
+                    });
+                }
 
                 // Prevent pausing and volume change for 10 seconds
                 video.addEventListener("pause", preventPause);
@@ -86,7 +94,10 @@
 
                 // Remove click listener after activation
                 document.removeEventListener("click", enableSound);
-            });
+            }
+
+            // Wait for user interaction to unmute
+            document.addEventListener("click", enableSound);
         });
     </script>
 
