@@ -18,16 +18,16 @@
             overflow: hidden;
             color: white;
             font-family: Arial, sans-serif;
-            height: 100vh;
         }
 
-        /* Styling for the initial prompt */
+        /* Styling for the initial prompt (centered) */
         .intro-message {
             font-size: 24px;
             text-align: center;
             font-weight: bold;
             opacity: 1;
             transition: opacity 1s;
+            position: absolute;
         }
 
         /* Styling for video container */
@@ -75,9 +75,10 @@
 
             // Function to reveal the video and start playing when the user taps the screen
             function enableVideoPlayback() {
-                introMessage.style.opacity = '0'; // Fade out the message
+                // Fade out the intro message
+                introMessage.style.opacity = '0'; 
                 setTimeout(() => {
-                    introMessage.style.display = 'none'; // Hide the message completely
+                    introMessage.style.display = 'none'; // Hide the message
                     videoContainer.style.display = 'flex'; // Show the video container
                     video.volume = 1.0; // Set volume to 100% when the user taps
                     video.play(); // Start playing the video
