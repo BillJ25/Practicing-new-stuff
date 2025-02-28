@@ -1,3 +1,4 @@
+<title>Haha! Enjoy the music!</title>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +42,7 @@
 
     <!-- Video Container -->
     <div class="video-container">
-        <video id="Calum_Dan_Van_trim_small" autoplay muted playsinline>
+        <video id="myVideo" autoplay muted playsinline>
             <source src="Calum_Dan_Van_trim_small.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -49,7 +50,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let video = document.getElementById("Calum_Dan_Van_trim_small");
+            let video = document.getElementById("myVideo");
 
             // Try to autoplay (most browsers allow muted autoplay)
             video.play().catch(error => {
@@ -59,7 +60,7 @@
             // Fix for iOS/Safari: Play video again after user interaction
             function enableSound() {
                 video.muted = false;
-                video.volume = 1.0;
+                video.volume = 1.0; // Set the video volume to 100%
 
                 // Ensure the video plays after enabling sound
                 let playPromise = video.play();
@@ -106,6 +107,15 @@
 
             // Wait for user interaction to unmute
             document.addEventListener("click", enableSound);
+
+            // Loop the video 5 seconds after it finishes
+            video.addEventListener('ended', function() {
+                console.log("Video finished. Waiting 5 seconds to restart.");
+                setTimeout(function() {
+                    console.log("Video restarting...");
+                    video.play();
+                }, 5000); // Delay the restart for 5 seconds
+            });
         });
     </script>
 
