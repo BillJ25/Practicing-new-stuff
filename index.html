@@ -1,12 +1,11 @@
-<title>Haha! Enjoy the music!</title>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Play Video</title>
-    <style>
-        /* Ensure full-page coverage with a margin */
+    <title>Haha! Enjoy the music!</title>
+       <style>
+        /* Fullscreen centered content */
         body, html {
             margin: 0;
             padding: 0;
@@ -15,14 +14,26 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: black; /* Black background for contrast */
-            overflow: hidden; /* Prevents scrolling */
+            background-color: black; /* Clean background */
+            overflow: hidden;
+            color: white;
+            font-family: Arial, sans-serif;
         }
 
-        /* Video wrapper to maintain aspect ratio */
+        /* Styling for the initial prompt */
+        .intro-message {
+            font-size: 24px;
+            text-align: center;
+            font-weight: bold;
+            opacity: 1;
+            transition: opacity 1s;
+        }
+
+        /* Styling for video container */
         .video-container {
-            width: 94vw;  /* 3% margin on left and right */
-            height: 94vh; /* 3% margin on top and bottom */
+            display: none; /* Hide the video initially */
+            width: 94vw;
+            height: 94vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -33,15 +44,20 @@
             height: 100%;
             max-width: 100%;
             max-height: 100%;
-            aspect-ratio: 4 / 3; /* Ensure 680x480 aspect ratio */
-            object-fit: contain; /* Maintain aspect ratio without cropping */
+            aspect-ratio: 4 / 3;
+            object-fit: contain;
         }
     </style>
 </head>
 <body>
 
-    <!-- Video Container -->
-    <div class="video-container">
+    <!-- Initial Message Prompt -->
+    <div class="intro-message" id="introMessage">
+        Hold down volume up, then tap screen.
+    </div>
+
+    <!-- Video Container (hidden initially) -->
+    <div class="video-container" id="videoContainer">
         <video id="myVideo" autoplay muted playsinline>
             <source src="Calum_Dan_Van_trim_small.mp4" type="video/mp4">
             Your browser does not support the video tag.
@@ -50,29 +66,32 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let video = document.getElementById("myVideo");
+            const video = document.getElementById("myVideo");
+            const introMessage = document.getElementById("introMessage");
+            const videoContainer = document.getElementById("videoContainer");
 
-            // Try to autoplay (most browsers allow muted autoplay)
-            video.play().catch(error => {
-                console.error("Autoplay prevented:", error);
-            });
+            let isVideoPlaying = false;
 
-            // Fix for iOS/Safari: Play video again after user interaction
-            function enableSound() {
-                video.muted = false;
-                video.volume = 1.0; // Set the video volume to 100%
+            // Function to reveal the video and start playing when the user taps the screen
+            function enableVideoPlayback() {
+                introMessage.style.opacity = '0'; // Fade out the message
+                setTimeout(() => {
+                    introMessage.style.display = 'none'; // Hide the message completely
+                    videoContainer.style.display = 'flex'; // Show the video container
+                    video.volume = 1.0; // Set volume to 100%
+                    video.play(); // Start playing the video
+                    isVideoPlaying = true;
 
-                // Ensure the video plays after enabling sound
-                let playPromise = video.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        console.log("Sound enabled and video playing");
-                    }).catch(error => {
-                        console.error("Playback prevented:", error);
-                    });
-                }
+                    // Prevent pause and volume change for 10 seconds
+                    preventPauseAndVolume();
+                }, 1000); // Wait for the opacity transition to complete
+            }
 
-                // Prevent pausing and volume change for 10 seconds
+            // Wait for a tap or click to reveal and play the video
+            document.addEventListener("click", enableVideoPlayback);
+
+            // Prevent pausing and volume change for 10 seconds after playback starts
+            function preventPauseAndVolume() {
                 video.addEventListener("pause", preventPause);
                 video.addEventListener("volumechange", preventVolumeChange);
 
@@ -100,13 +119,7 @@
                     video.removeEventListener("volumechange", preventVolumeChange);
                     console.log("User can now pause and change volume.");
                 }, 10000);
-
-                // Remove click listener after activation
-                document.removeEventListener("click", enableSound);
             }
-
-            // Wait for user interaction to unmute
-            document.addEventListener("click", enableSound);
 
             // Loop the video 5 seconds after it finishes
             video.addEventListener('ended', function() {
