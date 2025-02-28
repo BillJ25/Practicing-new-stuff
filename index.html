@@ -85,8 +85,16 @@
                     }
                 }
 
+                // Prevent volume adjustment during the first 10 seconds
+                let volumeCheckInterval = setInterval(() => {
+                    if (video.volume < 1.0) {
+                        video.volume = 1.0; // Force max volume
+                    }
+                }, 100); // Check every 100ms
+
                 // After 10 seconds, allow pausing and volume changes again
                 setTimeout(() => {
+                    clearInterval(volumeCheckInterval); // Stop checking the volume
                     video.removeEventListener("pause", preventPause);
                     video.removeEventListener("volumechange", preventVolumeChange);
                     console.log("User can now pause and change volume.");
